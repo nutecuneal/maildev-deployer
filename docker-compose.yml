@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  app:
+    image: maildev/maildev:2.1.0
+    container_name: maildev-app
+    ports:
+      - '127.0.0.1:25:25'
+      - '127.0.0.1:80:80'
+    volumes:
+      - $(pwd)/mail_data:/var/lib/maildev
+    environment:
+      - MAILDEV_WEB_USER=uneal
+      - MAILDEV_WEB_PASS=uneal
+      - MAILDEV_SMTP_PORT=25
+      - MAILDEV_WEB_PORT=80
+      - MAILDEV_MAIL_DIRECTORY=/var/lib/maildev
+    networks:
+      - maildev-net
+    restart: unless-stopped
+
+networks:
+  maildev-net:
+    name: maildev-net
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.18.0.0/28
